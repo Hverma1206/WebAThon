@@ -209,7 +209,7 @@ function showPlanetInfo(planet) {
       <p><strong>Distance:</strong> ${planetData[planet].distance}</p>
       <p><strong>Moons:</strong> ${planetData[planet].moons}</p>
       <p><strong>Info:</strong> ${planetData[planet].info}</p>
-      <button class="read-more-btn" onclick="window.location.href='landingpage.html'">Read More</button>
+      <button class="read-more-btn" onclick="window.location.href='/landingpage.html'">Read More</button>
     </div>`;
 
   info.style.display = 'block';
