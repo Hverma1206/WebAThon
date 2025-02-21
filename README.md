@@ -1,27 +1,49 @@
-# Solar System 3D Explorer
+# Space Observatory & Calendar Web Application
 
-An interactive 3D visualization of our solar system built with Three.js, allowing users to explore planets and their properties.
-
+An interactive web application for tracking celestial events, astronomical phenomena, and space-related observations.
 
 ## Features
 
-- Realistic 3D models of all planets in the solar system
-- Interactive camera controls for exploration
-- Planet information panels with scientific data
-- Day/night cycle visualization for Earth
-- Realistic planetary rotations and orbits
-- Atmospheric effects for Venus and Earth
-- Detailed moon systems for Earth, Mars, and Jupiter
-- Asteroid belts between Mars/Jupiter and beyond Neptune
-- Dynamic lighting and shadow effects
-- Responsive design that works on all screen sizes
+- **Interactive Calendar**: Track and filter celestial events by date and category
+- **Event Catalog**: Comprehensive database of astronomical events including:
+  - Meteor showers
+  - Solar and lunar eclipses  
+  - Planet oppositions
+  - Comets and asteroids
+  - Special astronomical phenomena
+
+- **Event Details**:
+  - Date and duration
+  - Visibility locations
+  - Detailed descriptions
+  - Viewing tips and requirements
+  - Equipment recommendations
+
+- **Filtering & Search**:
+  - Search events by name/type
+  - Filter by category
+  - Filter by date range
+  - Filter by visibility location
 
 ## Technologies Used
 
-- [Three.js](https://threejs.org/) - 3D graphics library
-- [Vite](https://vitejs.dev/) - Frontend build tool
-- [dat.GUI](https://github.com/dataarts/dat.gui) - Controls interface
-- [GLTFLoader](https://threejs.org/docs/#examples/en/loaders/GLTFLoader) - 3D model loading
+- HTML5
+- CSS3 
+- JavaScript
+- SVG Icons
+- Responsive Design
+- Vue.js
+- three.js
+## Usage
+
+1. Browse the calendar to view upcoming events
+2. Click on dates to see detailed event information
+3. Use filters to find specific types of events
+4. Get viewing tips and recommendations for each event
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Installation
 
