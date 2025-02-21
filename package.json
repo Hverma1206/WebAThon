@@ -1,11 +1,13 @@
 {
-  "name": "threejs-journey-exercise",
+  "name": "webathon",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "deploy": "vite build && aws s3 sync dist/ s3://friday-deployers --profile snapstayaws && aws s3 cp dist/ s3://friday-deployers --recursive --acl public-read --profile snapstayaws && echo 'Deployment Successful!'"
+
   },
   "devDependencies": {
     "vite": "^4.5.0"
