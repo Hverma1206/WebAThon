@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
-import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Moon, Star, Sun, Search, Info, Users, Mail } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Moon, Star, Sun, Search, Info, Users, Mail, Loader2, AlertTriangle } from 'lucide-react';
+import { useQuery } from 'react-query';
 import Calendar from './components/Calendar';
 import EventSidebar from './components/EventSidebar';
 import EventsList from './components/EventsList';
 import { Event } from './types';
+import { fetchEONETEvents } from './services/api';
 
 const sampleEvents: Event[] = [
   {
-    id: 1,
+    id: "1",
     title: 'Meteor Shower',
     date: new Date(2024, 2, 15),
     description: 'Annual Geminids meteor shower peaks tonight. Best viewing conditions after midnight.',
@@ -18,7 +20,7 @@ const sampleEvents: Event[] = [
     viewingTips: 'Find a dark location away from city lights. Allow 30 minutes for your eyes to adjust to darkness.',
   },
   {
-    id: 2,
+    id: "2",
     title: 'Solar Eclipse',
     date: new Date(2024, 2, 20),
     description: 'Partial solar eclipse visible from North America. Remember to use proper eye protection!',
@@ -29,7 +31,7 @@ const sampleEvents: Event[] = [
     viewingTips: 'Use certified eclipse glasses. Never look directly at the sun without proper protection.',
   },
   {
-    id: 3,
+    id: "3",
     title: 'Lunar Eclipse',
     date: new Date(2024, 2, 25),
     description: 'Total lunar eclipse visible from most of Europe and Asia.',
@@ -40,7 +42,7 @@ const sampleEvents: Event[] = [
     viewingTips: 'No special equipment needed. Best viewed with binoculars or a small telescope.',
   },
   {
-    id: 4,
+    id: "4",
     title: 'Venus at Maximum Brightness',
     date: new Date(2024, 2, 28),
     description: 'Venus reaches its peak brightness in the evening sky.',
@@ -57,20 +59,26 @@ function App() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [searchQuery, setSearchQuery] = useState('');
   const [showAllEvents, setShowAllEvents] = useState(false);
+
+  const { data: eonetEvents, isLoading, error } = useQuery('eonetEvents', fetchEONETEvents, {
+    refetchInterval: 300000, // Refetch every 5 minutes
+  });
+
+  const allEvents = [...sampleEvents, ...(eonetEvents || [])];
   
   const selectedEvents = selectedDate
-    ? sampleEvents.filter(event => 
+    ? allEvents.filter(event => 
         event.date.toDateString() === selectedDate.toDateString()
       )
     : [];
 
   const filteredEvents = searchQuery
-    ? sampleEvents.filter(event =>
+    ? allEvents.filter(event =>
         event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        event.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        event.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         event.location.toLowerCase().includes(searchQuery.toLowerCase())
       )
-    : sampleEvents;
+    : allEvents;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-purple-900 to-gray-900">
@@ -139,11 +147,11 @@ function App() {
       <section className="pt-32 pb-16 text-center">
         <div className="container mx-auto px-4">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Discover the Wonders of the Night Sky
+            Track Natural Events & Celestial Phenomena
           </h2>
           <p className="text-white/60 text-lg md:text-xl max-w-2xl mx-auto">
-            Never miss another celestial event. From meteor showers to eclipses, 
-            we help you track and prepare for all astronomical phenomena.
+            Real-time updates on astronomical events and natural phenomena worldwide.
+            From meteor showers to natural events, stay informed about our dynamic planet.
           </p>
         </div>
       </section>
@@ -152,6 +160,7 @@ function App() {
       <main className="container mx-auto px-4 pb-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
+            {/* Calendar Section */}
             <div className="bg-white/5 backdrop-blur-lg rounded-2xl border border-white/10 p-6 shadow-xl">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-semibold text-white">
@@ -175,7 +184,7 @@ function App() {
               
               <Calendar
                 currentMonth={currentMonth}
-                events={sampleEvents}
+                events={allEvents}
                 selectedDate={selectedDate}
                 onSelectDate={setSelectedDate}
               />
@@ -184,9 +193,22 @@ function App() {
             {/* Events List Section */}
             <div className="mt-8">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-semibold text-white">
-                  Upcoming Events
-                </h2>
+                <div>
+                  <h2 className="text-2xl font-semibold text-white">
+                    Events & Natural Phenomena
+                  </h2>
+                  {isLoading && (
+                    <div className="flex items-center gap-2 text-purple-400 mt-2">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span className="text-sm">Fetching latest events...</span>
+                    </div>
+                  )}
+                  {error && (
+                    <p className="text-red-400 text-sm mt-2">
+                      Error loading events. Please try again later.
+                    </p>
+                  )}
+                </div>
                 <button
                   onClick={() => setShowAllEvents(!showAllEvents)}
                   className="text-purple-400 hover:text-purple-300 transition-colors"
@@ -211,20 +233,20 @@ function App() {
             {/* Quick Tips Section */}
             <div className="mt-8 bg-white/5 backdrop-blur-lg rounded-2xl border border-white/10 p-6 shadow-xl">
               <h3 className="text-xl font-semibold text-white mb-4">
-                Stargazing Tips
+                Event Tracking Guide
               </h3>
               <ul className="space-y-4">
                 <li className="flex items-start space-x-3">
                   <Moon className="w-5 h-5 text-purple-400 mt-1" />
-                  <p className="text-white/60">Check moonrise and moonset times for optimal viewing conditions</p>
+                  <p className="text-white/60">Track astronomical events and plan your observations</p>
                 </li>
                 <li className="flex items-start space-x-3">
                   <Star className="w-5 h-5 text-purple-400 mt-1" />
-                  <p className="text-white/60">Find dark sky locations away from city lights</p>
+                  <p className="text-white/60">Monitor natural phenomena and their locations</p>
                 </li>
                 <li className="flex items-start space-x-3">
-                  <Sun className="w-5 h-5 text-purple-400 mt-1" />
-                  <p className="text-white/60">Allow your eyes to adjust to darkness for at least 30 minutes</p>
+                  <AlertTriangle className="w-5 h-5 text-purple-400 mt-1" />
+                  <p className="text-white/60">Stay informed about environmental events worldwide</p>
                 </li>
               </ul>
             </div>

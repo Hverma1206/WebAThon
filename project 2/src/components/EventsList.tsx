@@ -1,6 +1,7 @@
 import React from 'react';
 import { Event } from '../types';
-import { Moon, Star, Sun } from 'lucide-react';
+import { Moon, Star, Sun, AlertTriangle } from 'lucide-react';
+import EventMap from './EventMap';
 
 interface EventsListProps {
   events: Event[];
@@ -19,6 +20,8 @@ const EventsList: React.FC<EventsListProps> = ({ events, showAll }) => {
         return <Sun className="w-6 h-6 text-orange-400" />;
       case 'lunar':
         return <Moon className="w-6 h-6 text-blue-400" />;
+      case 'natural':
+        return <AlertTriangle className="w-6 h-6 text-red-400" />;
       default:
         return <Star className="w-6 h-6 text-purple-400" />;
     }
@@ -42,7 +45,7 @@ const EventsList: React.FC<EventsListProps> = ({ events, showAll }) => {
                     {event.title}
                   </h3>
                   <p className="text-purple-400 text-sm mb-2">
-                    {event.date.toLocaleDateString()} • {event.duration}
+                    {event.date.toLocaleDateString()} {event.duration && `• ${event.duration}`}
                   </p>
                 </div>
                 <span className="px-3 py-1 bg-white/5 rounded-full text-sm text-white/60">
@@ -52,14 +55,25 @@ const EventsList: React.FC<EventsListProps> = ({ events, showAll }) => {
               <p className="text-white/60 mb-4">
                 {event.description}
               </p>
-              <div className="bg-white/5 rounded-lg p-4">
-                <h4 className="text-sm font-medium text-purple-400 mb-2">
-                  Viewing Tips
-                </h4>
-                <p className="text-white/60 text-sm">
-                  {event.viewingTips}
-                </p>
-              </div>
+              {event.viewingTips && (
+                <div className="bg-white/5 rounded-lg p-4 mb-4">
+                  <h4 className="text-sm font-medium text-purple-400 mb-2">
+                    Viewing Tips
+                  </h4>
+                  <p className="text-white/60 text-sm">
+                    {event.viewingTips}
+                  </p>
+                </div>
+              )}
+              {event.category && (
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-sm text-white/60">Category:</span>
+                  <span className="px-2 py-1 bg-white/5 rounded-full text-sm text-purple-400">
+                    {event.category.title}
+                  </span>
+                </div>
+              )}
+              {event.coordinates && <EventMap event={event} />}
             </div>
           </div>
         </div>
