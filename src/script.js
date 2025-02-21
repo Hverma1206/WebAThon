@@ -232,7 +232,7 @@ function showPlanetInfo(planet) {
       <p><strong>Distance:</strong> ${planetData[planet].distance}</p>
       <p><strong>Moons:</strong> ${planetData[planet].moons}</p>
       <p class="planet-info"><strong>Info:</strong> ${planetData[planet].info}</p>
-      <button class="read-more-btn" onclick="window.location.href='https://friday-events.netlify.app/'">Learn More About ${planet}</button>
+      <button class="read-more-btn" onclick="window.location.href='https://friday-events.netlify.app/'">Learn More About Events</button>
     </div>`;
 
   info.style.display = 'block';
