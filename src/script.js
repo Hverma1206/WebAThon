@@ -36,6 +36,19 @@ import uraRingTexture from '/images/uranus_ring.png';
 import neptuneTexture from '/images/neptune.jpg';
 import plutoTexture from '/images/plutomap.jpg';
 
+// Add this after all your imports
+let loadingManager = new THREE.LoadingManager();
+loadingManager.onProgress = function(url, itemsLoaded, itemsTotal) {
+    const progress = (itemsLoaded / itemsTotal * 100).toFixed(0);
+    const loadingScreen = document.getElementById('loadingScreen');
+    if (progress === '100') {
+        loadingScreen.style.opacity = '0';
+        setTimeout(() => {
+            loadingScreen.style.display = 'none';
+        }, 500);
+    }
+};
+
 // ******  SETUP  ******
 console.log("Create the scene");
 const scene = new THREE.Scene();
@@ -57,8 +70,8 @@ controls.dampingFactor = 0.75;
 controls.screenSpacePanning = false;
 
 console.log("Set up texture loader");
-const cubeTextureLoader = new THREE.CubeTextureLoader();
-const loadTexture = new THREE.TextureLoader();
+const cubeTextureLoader = new THREE.CubeTextureLoader(loadingManager);
+const loadTexture = new THREE.TextureLoader(loadingManager);
 
 // ******  POSTPROCESSING setup ******
 const composer = new EffectComposer(renderer);
@@ -95,7 +108,12 @@ scene.background = cubeTextureLoader.load([
 ]);
 
 // ******  CONTROLS  ******
-const gui = new dat.GUI({ autoPlace: false });
+const gui = new dat.GUI({ 
+    autoPlace: false,
+    width: 300
+});
+gui.domElement.style.opacity = '0.8';
+
 const customContainer = document.getElementById('gui-container');
 customContainer.appendChild(gui.domElement);
 
@@ -106,13 +124,18 @@ const settings = {
   sunIntensity: 1.9
 };
 
-gui.add(settings, 'accelerationOrbit', 0, 10).onChange(value => {
-});
-gui.add(settings, 'acceleration', 0, 10).onChange(value => {
-});
-gui.add(settings, 'sunIntensity', 1, 10).onChange(value => {
-  sunMat.emissiveIntensity = value;
-});
+const orbitFolder = gui.addFolder('Orbit Controls');
+orbitFolder.add(settings, 'accelerationOrbit', 0, 10).name('Orbit Speed');
+orbitFolder.add(settings, 'acceleration', 0, 10).name('Rotation Speed');
+
+const sunFolder = gui.addFolder('Sun Controls');
+sunFolder.add(settings, 'sunIntensity', 1, 10).name('Sun Intensity')
+    .onChange(value => {
+        sunMat.emissiveIntensity = value;
+    });
+
+orbitFolder.open();
+sunFolder.open();
 
 // mouse movement
 const raycaster = new THREE.Raycaster();
@@ -208,8 +231,8 @@ function showPlanetInfo(planet) {
       <p><strong>Orbit:</strong> ${planetData[planet].orbit}</p>
       <p><strong>Distance:</strong> ${planetData[planet].distance}</p>
       <p><strong>Moons:</strong> ${planetData[planet].moons}</p>
-      <p><strong>Info:</strong> ${planetData[planet].info}</p>
-      <button class="read-more-btn" onclick="window.location.href='https://friday-events.netlify.app/'">Read More</button>
+      <p class="planet-info"><strong>Info:</strong> ${planetData[planet].info}</p>
+      <button class="read-more-btn" onclick="window.location.href='https://friday-events.netlify.app/'">Learn More About ${planet}</button>
     </div>`;
 
   info.style.display = 'block';

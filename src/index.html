@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solar System</title>
+    <title>Solar System Exploration</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         #gui-container {
             position: absolute;
@@ -15,14 +16,32 @@
     </style>
 </head>
 <body>
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h2>Loading Solar System...</h2>
+        </div>
+    </div>
+
+    <div class="title-container">
+        <h1 class="title">Solar System Explorer</h1>
+        <div class="controls-info">
+            <p>🖱️ Click on a planet to explore</p>
+            <p>🔄 Use mouse wheel to zoom</p>
+            <p>👆 Drag to rotate view</p>
+        </div>
+    </div>
+
     <div id="gui-container"></div>
-    <div><script type="module" src="./script.js"></script></div>
+
     <div id="planetInfo" class="planet-info">
         <div class="planet-info-content">
             <span class="close-btn" onclick="closeInfo()">&times;</span>
             <h2 id="planetName"></h2>
-            <p id="planetDetails"></p>
+            <div id="planetDetails"></div>
         </div>
     </div>
+
+    <script type="module" src="./script.js"></script>
 </body>
 </html>
